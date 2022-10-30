@@ -1,0 +1,24 @@
+.primary_link{
+    text-decoration: none;
+    color: white;
+}
+
+.primary_link:hover{
+    color: white;
+}
+
+.primary{
+    font-size: 1.6rem;
+    background-color: #163A5F;
+    border: 1px solid #163A5F;
+    color: #FFFFFF;
+    transition: 0.2s ease-in-out;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    text-decoration: none;  
+}
+
+.primary:hover{
+    color: #163A5F;
+    background-color: #FFFFFF; 
+}
