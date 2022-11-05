@@ -21,8 +21,7 @@ let Header = () => {
 
   let content = (
     <header className={[`${style.header} shadow-lg`]} /*onMouseMove={mouseMove} onMouseLeave={mouseLeave}*/>
-      <div className={`${style.pointer}`} id="pointer"></div>
-      <Container className={`py-3`}>
+      <Container onClick={window.scrollTo(0,0)} className={`py-3`} >
         <Link to="/" className={`${globalButtons.primary_link}`}><h1>Quest Builder</h1></Link>
       </Container>
     </header>

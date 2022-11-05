@@ -1,0 +1,43 @@
+.content
+{
+    width: 50%;
+}
+
+.content input[type="text"]
+{
+    font-size: 1.6rem;
+}
+
+.content button
+{
+    font-size: 1.6rem;
+}
+
+.content .image_container
+{
+    width: 100%;
+    background: linear-gradient(-45deg, #470882, #5d37be, #5d57d4, #5082fe);
+	background-size: 400% 400%;
+    border-radius: 1.5rem;
+    animation: gradient 5s ease infinite;
+    text-align: center;
+    font-size: 3.2rem;
+    color: white;
+}
+
+@keyframes gradient {
+	0% {
+		background-position: 0% 50%;
+	}
+	50% {
+		background-position: 100% 50%;
+	}
+	100% {
+		background-position: 0% 50%;
+	}
+}
+
+.content .image_container img
+{
+    width: 20rem;
+}
