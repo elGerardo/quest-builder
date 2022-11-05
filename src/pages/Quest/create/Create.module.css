@@ -1,0 +1,13 @@
+.content{
+    width: 60%;
+}
+.content input[type="text"]
+{
+    font-size: 1.6rem;
+}
+
+.content button
+{
+    font-size: 1.6rem;
+    margin: 0 1rem;
+}

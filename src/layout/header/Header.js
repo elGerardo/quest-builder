@@ -4,8 +4,24 @@ import style from "./Header.module.css"
 import globalButtons from "../../global/buttons.module.css";
 
 let Header = () => {
+
+  /*let mouseMove = (e) => {
+    let pointer = document.getElementById("pointer");
+    pointer.style.display = "inline"; 
+    let x = e.pageX;
+    let y = e.pageY;
+    pointer.style.left = x + 'px';
+    pointer.style.top = y + 'px';
+  }
+
+  let mouseLeave = (e) => {
+    let pointer = document.getElementById("pointer");
+    pointer.style.display = "none";
+  };*/
+
   let content = (
-    <header className={[`${style.header} shadow-lg`]}>
+    <header className={[`${style.header} shadow-lg`]} /*onMouseMove={mouseMove} onMouseLeave={mouseLeave}*/>
+      <div className={`${style.pointer}`} id="pointer"></div>
       <Container className={`py-3`}>
         <Link to="/" className={`${globalButtons.primary_link}`}><h1>Quest Builder</h1></Link>
       </Container>

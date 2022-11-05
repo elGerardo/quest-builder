@@ -1,5 +1,15 @@
 .header{
-    width: 100%;
     color: #FFFFFF;
-    background-color: #163A5F;
+    background: rgb(73,125,240);
+    background: linear-gradient(308deg, rgba(73,125,240,1) 0%, rgba(72,67,186,1) 25%, rgba(71,7,129,1) 100%); 
+}
+
+.pointer
+{
+    width: 2.5rem;
+    height: 2.5rem;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    background: rgb(255,255,255);
+    background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 51%, rgba(255,255,255,0) 100%); 
 }
