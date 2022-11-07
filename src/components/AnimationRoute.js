@@ -5,8 +5,10 @@ import { AnimatePresence } from "framer-motion";
 import Welcome from "../pages/welcome/Welcome.js";
 
 //Create
+//import CreateTest from "../pages/Quest/create/CreateTest.js";
 import CreateQuest from "../pages/Quest/create/Create.js";
-import CreateName from "../pages/Quest/create/CreateName.js";
+//import CreateName from "../pages/Quest/create/CreateName.js";
+//import CreateCategory from "../pages/Quest/create/CreateCategory";
 
 //Share
 import ShareQuest from "../pages/Quest/share/Share.js";
@@ -20,7 +22,6 @@ let AnimationRoute = () => {
         <Route index element={<Welcome />} />
         
         <Route path="/create" element={<CreateQuest />} />
-        <Route path="/create/CreateName" element={<CreateName />}/>
         
         <Route path="/share" element={<ShareQuest />} />
         <Route />

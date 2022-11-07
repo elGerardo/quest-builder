@@ -12,7 +12,8 @@
     font-size: 1.6rem;
     font-weight: 600;
     background: rgb(117,111,230);
-    background: linear-gradient(308deg, rgba(117,111,230,1) 0%, rgba(46,40,162,1) 100%); color: #FFFFFF;
+    background: linear-gradient(308deg, rgba(117,111,230,1) 0%, rgba(46,40,162,1) 100%); 
+    color: #FFFFFF;
     transition: 0.2s ease-in-out;
     border-radius: 0.5rem;
     padding: 0.5rem;

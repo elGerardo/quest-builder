@@ -1,20 +1,22 @@
-import { Container, Form, Button } from "react-bootstrap";
+import { Container, Form } from "react-bootstrap";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleRight } from "@fortawesome/free-solid-svg-icons";
 import style from "./CreateName.module.css";
 import globalButtons from "../../../global/buttons.module.css";
-let CreateName = () => {
+let CreateCategory = () => {
   //states
   let [questName, setQuestName] = useState("");
 
   let content = (
     <motion.div
-      initial={{ width: 0 }}
-      transition={{ x: { duration: 0.5 } }}
+      transition={{
+        opacity: 1,
+        x: { duration: 0.5 },
+      }}
       animate={{ width: "100%" }}
-      exit={{ x: window.innerWidth }}
+      exit={{ opacity: 0, x: window.innerWidth }}
     >
       <Container
         className={`d-flex justify-content-center align-items-center my-5`}
@@ -39,11 +41,15 @@ let CreateName = () => {
             >
               <button className={`${globalButtons.next_button} shadow`}>
                 <div>
-                  <span className={`${globalButtons.next_button_text}`}>Continue</span>
+                  <span className={`${globalButtons.next_button_text}`}>
+                    Continue
+                  </span>
                   <span className={`${globalButtons.next_button_icon}`}>
                     <FontAwesomeIcon icon={faCircleRight} />
                   </span>
-                  <span className={`${globalButtons.next_button_text_hover}`}>Continue</span>
+                  <span className={`${globalButtons.next_button_text_hover}`}>
+                    Continue
+                  </span>
                 </div>
               </button>
             </div>
@@ -56,4 +62,4 @@ let CreateName = () => {
   return content;
 };
 
-export default CreateName;
+export default CreateCategory;

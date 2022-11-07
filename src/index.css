@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 html{
   font-size: 62.5%;
@@ -13,4 +13,18 @@ body {
   font-size: 16px;
   color: #172029;
   overflow-x: hidden;
+}
+
+input[type='radio']:checked:after {
+  width: 2.1rem;
+  height: 2.1rem;
+  top: -0.3rem;
+  left: -0.3rem;
+  border-radius: 15px;
+  position: relative;
+  background-color: rgba(46,40,162,1);
+  content: '';
+  display: inline-block;
+  visibility: visible;
+  border: 2px solid rgb(219, 219, 219);
 }

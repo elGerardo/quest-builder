@@ -1,0 +1,29 @@
+.container
+{
+    height: 80vh;
+}
+
+.content
+{
+    width: 50%;
+}
+
+.content h2
+{
+    color: #b9b9b9;
+}
+
+.content input[type="text"]
+{
+    font-size: 1.6rem;
+}
+
+.content button
+{
+    font-size: 1.6rem;
+}
+
+.footer_btns
+{
+    transition: all 0.3s ease-in-out;
+}

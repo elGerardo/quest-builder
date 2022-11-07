@@ -4,16 +4,10 @@ import { Container } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faShare } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+//import { motion } from "framer-motion";
 
 let Welcome = () => {
   let content = (
-    <motion.div
-      initial={{ height: 0 }}
-      transition={{ y: { duration: 0.5 } }}
-      animate={{ height: "100%" }}
-      exit={{ y: window.innerHeight }}
-    >
       <Container
         className={`${style.container} d-flex justify-content-center align-items-center my-5`}
       >
@@ -29,7 +23,7 @@ let Welcome = () => {
               <h1 className={`display-1`}>
                 <strong>
                   Create and Share
-                  <br /> your Quests.
+                  <br /> your Tests.
                 </strong>
               </h1>
               <p className={`display-6`}>
@@ -49,7 +43,7 @@ let Welcome = () => {
                 </Link>
                 <Link
                   //onClick={document.getElementsByTagName("body")[0].style.overflow = "hidden"}
-                  to="/create/createName"
+                  to="/create"
                   className={`${globalButtons.primary_button} mx-5`}
                 >
                   <FontAwesomeIcon icon={faPlus} className={`mx-2`} />
@@ -60,7 +54,6 @@ let Welcome = () => {
           </div>
         </div>
       </Container>
-    </motion.div>
   );
   return content;
 };
