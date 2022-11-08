@@ -1,5 +1,5 @@
 import { Container, Form } from "react-bootstrap";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -16,10 +16,25 @@ import Builder from "./Builder.js";
 let Create = () => {
   //states
   let [questName, setQuestName] = useState("");
+  let [questCategory, setQuestCategory] = useState("");
   let [isCreateName, setIsCreateName] = useState(true);
   let [isChooseCategory, setIsChooseCategory] = useState(false);
   let [freeCategory, setFreeCategory] = useState("");
   let [isBuilder, setIsBuilder] = useState(false);
+
+  useEffect(() =>
+  {
+    if(localStorage.getItem("questName") != null) 
+    {
+      setIsCreateName(false);
+      setIsChooseCategory(true);
+    }
+    if(localStorage.getItem("questCategory") != null) 
+    {
+      setIsChooseCategory(false);
+      setIsBuilder(true)
+    }
+  }, []);
 
   let nextBuilder = (step) => {
     /*let body = document.getElementsByTagName("body")[0];
@@ -35,6 +50,10 @@ let Create = () => {
     if (step === 2) {
       setIsChooseCategory(false);
       setIsBuilder(true);
+
+      localStorage.setItem("questName", questName);
+      localStorage.setItem("questCategory", questCategory);
+
       return;
     }
   };
@@ -137,6 +156,7 @@ let Create = () => {
                         type="radio"
                         id="radio-exam"
                         name="categorySelect"
+                        onClick={(e) => { setQuestCategory("exam") }}
                       />
                       <div
                         className={`d-flex flex-column justify-content-left col`}
@@ -161,6 +181,7 @@ let Create = () => {
                         type="radio"
                         id="radio-vocational"
                         name="categorySelect"
+                        onClick={(e) => { setQuestCategory("vocational") }}
                       />
                       <div
                         className={`d-flex flex-column justify-content-left col`}
@@ -187,6 +208,7 @@ let Create = () => {
                         type="radio"
                         id="radio-survey"
                         name="categorySelect"
+                        onClick={(e) => { setQuestCategory("survey") }}
                       />
                       <div
                         className={`d-flex flex-column justify-content-left col`}
@@ -212,6 +234,7 @@ let Create = () => {
                         type="radio"
                         id="radio-none"
                         name="categorySelect"
+                        onClick={(e) => { setQuestCategory("none") }}
                       />
                       <div
                         className={`d-flex flex-column justify-content-left col`}
@@ -273,7 +296,7 @@ let Create = () => {
           }}
           exit={{ opacity: 0, x: 200 }}
         >
-          <Builder questName={questName}/>
+          <Builder/>
         </motion.div>
       )}
     </AnimatePresence>
