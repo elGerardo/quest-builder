@@ -1,4 +1,6 @@
 import style from "./Builder.module.css";
+import { Link } from "react-router-dom";
+import globalButtons from "../../../global/buttons.module.css";
 import { useEffect, useState } from "react";
 import {
   Container,
@@ -15,27 +17,30 @@ import BuilderItem from "./BuilderItem.js";
 let CreateQuest = (props) => {
   //states
   let [questName] = useState(localStorage.getItem("questName"));
+  let [isFinish, setIsFinish] = useState(false);
   //let [questCategory] = useState(localStorage.getItem("questCategory"));
   //let [questIcon] = useState(localStorage.getItem("questIcon"));
-  let [builderItems, setBuilderItems] = useState([]);
+  let [builderItems, setBuilderItems] = useState(
+    localStorage.getItem("build") != null
+      ? JSON.parse(localStorage.getItem("build")).items
+      : []
+  );
   let [show, setShow] = useState(false);
 
   let handleClose = () => setShow(false);
-  let handleShow = () => setShow(true);
+  let handleShow = (e) => setShow(e);
 
   //events
-  let onSubmit = (event) => {
-    event.preventDefault();
-    console.log(event);
-  };
 
-  let finishBuild = () => {
-    console.log(builderItems)
-    localStorage.setItem("build",JSON.stringify(builderItems));
-    console.log(JSON.parse(localStorage.getItem("build")));
-  };
-
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (builderItems.length > 0) {
+      let data = {
+        status: "building",
+        items: builderItems,
+      };
+      localStorage.setItem("build", JSON.stringify(data));
+    }
+  }, [builderItems]);
 
   let content = (
     <Container
@@ -43,24 +48,49 @@ let CreateQuest = (props) => {
     >
       <Modal size="lg" centered show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>New Question</Modal.Title>
+          <Modal.Title>{isFinish ? <span>Finish Test</span> : <span>New Question</span>}</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <BuilderItem
-            flowCloseModal={handleClose}
-            flowData={(builderData) =>
-              setBuilderItems((currentItems) => [...currentItems, builderData])
-            }
-          />
+        <Modal.Body  className={`py-5`}>
+          {isFinish ? (
+            <div className={`text-center`}>
+              <h2>You haven't loged yet</h2>
+              <p className={`text-center mb-5`}>
+                Your test will be saved for a while. If you want to persist you
+                test your whole life create and account... it's free ;)
+              </p>
+              <Link
+                to="/share"
+                className={`${globalButtons.secondary_button} m-5`}
+              >
+                <span>Finish Anyway</span>
+              </Link>
+              <Link
+                to="/create"
+                className={`${globalButtons.primary_button} mx-5`}
+              >
+                <span>Create Account</span>
+              </Link>
+            </div>
+          ) : (
+            <BuilderItem
+              flowCloseModal={handleClose}
+              flowData={(builderData) =>
+                setBuilderItems((currentItems) => [
+                  ...currentItems,
+                  builderData,
+                ])
+              }
+            />
+          )}
         </Modal.Body>
-        <Modal.Footer>
+        {/*<Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Cancel
           </Button>
           <Button variant="primary" onClick={handleClose}>
             Save
           </Button>
-        </Modal.Footer>
+        </Modal.Footer>*/}
       </Modal>
 
       <div className={`${style.content}`}>
@@ -68,11 +98,14 @@ let CreateQuest = (props) => {
         {builderItems.length === 0 && (
           <h2 className={`text-center`}>
             It looks like you don't have any question registered yet. Press the
-            <FontAwesomeIcon icon={faPlus} /> button on the footer to add a new
-            question!
+            <span>
+              {" "}
+              <FontAwesomeIcon icon={faPlus} />{" "}
+            </span>
+            button on the footer to add a new question!
           </h2>
         )}
-        <Form onSubmit={onSubmit}>
+        <Form>
           {builderItems.map((item) =>
             item.type === "text" || item.type === "number" ? (
               <Form.Group key={item.title}>
@@ -109,7 +142,14 @@ let CreateQuest = (props) => {
               placement="top"
               overlay={<Tooltip className={`fs-4`}>Add Question</Tooltip>}
             >
-              <Button onClick={handleShow} className={`mx-3`} variant="light">
+              <Button
+                onClick={() => {
+                  handleShow(true);
+                  setIsFinish(false);
+                }}
+                className={`mx-3`}
+                variant="light"
+              >
                 <FontAwesomeIcon icon={faPlus} />
               </Button>
             </OverlayTrigger>
@@ -119,10 +159,12 @@ let CreateQuest = (props) => {
               overlay={<Tooltip className={`fs-4`}>Finish Quest</Tooltip>}
             >
               <Button
-                onClick={finishBuild}
+                onClick={() => {
+                  handleShow(true);
+                  setIsFinish(true);
+                }}
                 className={`mx-3`}
                 variant="primary"
-                type="submit"
               >
                 Finish
               </Button>

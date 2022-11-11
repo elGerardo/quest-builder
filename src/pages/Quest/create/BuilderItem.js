@@ -9,7 +9,6 @@ let BuilderItem = (props) => {
 
   let onSubmit = (e) => {
     e.preventDefault();
-    console.log(type);
     if (type === "text" || type === "number") {
       let data = {
         title: title,
@@ -47,6 +46,7 @@ let BuilderItem = (props) => {
 
   let content = (
     <Container className={`${style.container} row`}>
+      {/* Builder */}
       <div className={`col text-left`}>
         <h2>Builder</h2>
         <hr />
@@ -96,7 +96,7 @@ let BuilderItem = (props) => {
               id="multiple"
             />
           </Form.Group>
-          {type === "select" ? (
+          {type === "select" || type === "multiple" ? (
             <div>
               <Form.Control
                 min="0"
@@ -135,6 +135,8 @@ let BuilderItem = (props) => {
           <Button type="submit">Finish</Button>
         </Form>
       </div>
+
+      {/* How will looks */}
       <div className={`col text-left`}>
         <h2>How will looks</h2>
         <hr />
@@ -155,12 +157,17 @@ let BuilderItem = (props) => {
           />
         ) : type === "select" ? (
           <Form.Select aria-label="Default select example">
-            <option defaultValue="selected" disabled selected>
+            <option defaultValue="selected" disabled>
               Select an option...
             </option>
             <option value="1">Here will be all your options</option>
             <option value="1">To Choose</option>
           </Form.Select>
+        ) : type === "multiple" ? (
+          <div>
+            <Form.Check inline label="Here will be all your" id="checkbox1" name="group1" type="checkbox" />
+            <Form.Check inline label="Multiple options to Choose" id="checkbox2" name="group2" type="checkbox" />
+          </div>
         ) : (
           <span></span>
         )}
@@ -171,26 +178,3 @@ let BuilderItem = (props) => {
 };
 
 export default BuilderItem;
-
-/*
-              {
-              Array.from( Array(8) ).map( (e, i) => {
-                <div className={`row`}>
-                  <div className={`col`}>
-                    <Form.Control
-                      size="sm"
-                      placeholder="option"
-                      type="text"
-                    ></Form.Control>
-                  </div>
-                  <div className={`col`}>
-                    <Form.Control
-                      size="sm"
-                      placeholder="value"
-                      type="number"
-                    ></Form.Control>
-                  </div>
-                </div>;
-                })
-              }
-*/
