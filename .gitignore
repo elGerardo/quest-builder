@@ -2,6 +2,9 @@
 
 # dependencies
 /node_modules
+/bootstrap
+/storage
+/vendor
 /.pnp
 .pnp.js
 

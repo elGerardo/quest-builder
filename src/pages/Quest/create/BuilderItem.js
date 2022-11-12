@@ -13,6 +13,7 @@ let BuilderItem = (props) => {
       let data = {
         title: title,
         type: type,
+        options: []
       };
 
       props.flowData(data);
@@ -24,7 +25,7 @@ let BuilderItem = (props) => {
       let data = {
         title: title,
         type: type,
-        options: [],
+        options: []
       };
 
       for (let index = 0; index < e.target.length; index++) {
