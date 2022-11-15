@@ -1,5 +1,4 @@
 import style from "./Builder.module.css";
-import { Link } from "react-router-dom";
 import globalButtons from "../../../global/buttons.module.css";
 import { useEffect, useState } from "react";
 import {
@@ -12,18 +11,22 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { Modal } from "react-bootstrap";
+import { Test } from "../../../services/Test.js";
 import BuilderItem from "./BuilderItem.js";
+import { useNavigate } from "react-router-dom";
 
 let CreateQuest = (props) => {
+  let navigate = useNavigate();
+
   //states
   let [questName] = useState(localStorage.getItem("questName"));
   let [isFinish, setIsFinish] = useState(false);
-  //let [questCategory] = useState(localStorage.getItem("questCategory"));
+  let [questCategory] = useState(localStorage.getItem("questCategory"));
   //let [questIcon] = useState(localStorage.getItem("questIcon"));
   let [builderItems, setBuilderItems] = useState(
-    localStorage.getItem("build") != null
-      ? JSON.parse(localStorage.getItem("build")).items
-      : []
+      localStorage.getItem("build") != null
+        ? JSON.parse(localStorage.getItem("build")).items
+        : []
   );
   let [show, setShow] = useState(false);
 
@@ -31,6 +34,59 @@ let CreateQuest = (props) => {
   let handleShow = (e) => setShow(e);
 
   //events
+  let finishTest = async (isLogin) => {
+    if (!isLogin) {
+      let data = {
+        status: "finish",
+        test: {
+          title: questName,
+          category: questCategory,
+          items: builderItems,
+        },
+        login: null,
+        uuid_reply: null,
+      };
+
+      //post service
+      let post = await new Test().store(data);
+
+      console.log(post.uuid_reply);
+      data.uuid_reply = post.uuid_reply;
+
+      if (localStorage.getItem("finished_test") != null) {
+        let tests = JSON.parse(localStorage.getItem("finished_test"));
+        tests.push(data);
+
+        localStorage.setItem("finished_test", JSON.stringify(tests));
+        
+        localStorage.removeItem("questName");
+        localStorage.removeItem("questCategory");
+        localStorage.removeItem("build");
+        
+        navigate("/share", { replace: true });
+        return;
+      }
+
+      localStorage.setItem("finished_test", JSON.stringify([data]));
+      localStorage.removeItem("questName");
+      localStorage.removeItem("questCategory");
+      localStorage.removeItem("build");
+      
+      navigate("/share", { replace: true });
+      return;
+    } else {
+      /*
+    redirect
+    login
+    
+    let data = {
+      status: "finish",
+      items: builderItems,
+      login: { with_data }
+    };
+    */
+    }
+  };
 
   useEffect(() => {
     if (builderItems.length > 0) {
@@ -48,9 +104,11 @@ let CreateQuest = (props) => {
     >
       <Modal size="lg" centered show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>{isFinish ? <span>Finish Test</span> : <span>New Question</span>}</Modal.Title>
+          <Modal.Title>
+            {isFinish ? <span>Finish Test</span> : <span>New Question</span>}
+          </Modal.Title>
         </Modal.Header>
-        <Modal.Body  className={`py-5`}>
+        <Modal.Body className={`py-5`}>
           {isFinish ? (
             <div className={`text-center`}>
               <h2>You haven't loged yet</h2>
@@ -58,18 +116,15 @@ let CreateQuest = (props) => {
                 Your test will be saved for a while. If you want to persist you
                 test your whole life create and account... it's free ;)
               </p>
-              <Link
-                to="/share"
+              <button
+                onClick={() => finishTest(false)}
                 className={`${globalButtons.secondary_button} m-5`}
               >
                 <span>Finish Anyway</span>
-              </Link>
-              <Link
-                to="/create"
-                className={`${globalButtons.primary_button} mx-5`}
-              >
+              </button>
+              <button className={`${globalButtons.primary_button} mx-5`}>
                 <span>Create Account</span>
-              </Link>
+              </button>
             </div>
           ) : (
             <BuilderItem
@@ -116,12 +171,15 @@ let CreateQuest = (props) => {
               <Form.Group>
                 <Form.Label>{item.title}</Form.Label>
                 <Form.Select aria-label={item.title}>
-                  <option disabled selected>
+                  <option key={`default`} disabled defaultValue={`selected`}>
                     Select an option...
                   </option>
                   {item.options.map((itemOption) => {
                     return (
-                      <option key={itemOption.option} value={itemOption.value}>
+                      <option
+                        key={itemOption.option + itemOption.value}
+                        value={itemOption.value}
+                      >
                         {itemOption.option}
                       </option>
                     );
@@ -156,14 +214,14 @@ let CreateQuest = (props) => {
             <OverlayTrigger
               key="finish"
               placement="top"
-              overlay={<Tooltip className={`fs-4`}>Finish Quest</Tooltip>}
+              overlay={<Tooltip className={`fs-4`}>Finish Test</Tooltip>}
             >
               <Button
                 onClick={() => {
                   handleShow(true);
                   setIsFinish(true);
                 }}
-                className={`mx-3`}
+                className={`${globalButtons.primary_button} mx-3`}
                 variant="primary"
               >
                 Finish

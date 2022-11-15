@@ -33,6 +33,8 @@
     padding: 0.5rem;
     text-decoration: none;  
     color: #b9b9b9;
+    border: none;
+    background: none;
 }
 
 .secondary_button:hover{
