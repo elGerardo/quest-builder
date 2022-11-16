@@ -1,8 +1,23 @@
-let BASE_API_URL = "http://127.0.0.1:8000/api/";
+let BASE_API_URL = "http://127.0.0.1:8000/api";
 
 export class Test {
+
+  async find(id) {
+    let response = await fetch(`${BASE_API_URL}/test/find?id=${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        accept: "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .catch((error) => console.error(error));
+
+    return response;
+  }
+
   async store(data) {
-    let response = await fetch(`${BASE_API_URL}storeTest`, {
+    let response = await fetch(`${BASE_API_URL}/test/store`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -11,7 +26,8 @@ export class Test {
       body: JSON.stringify(data),
     })
       .then((response) => response.json())
-      .catch((error) => console.log(error));
+      .catch((error) => console.error(error));
+
     return response;
   }
 }

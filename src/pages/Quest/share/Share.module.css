@@ -1,12 +1,22 @@
-.group_icons div
+.group_icons div,
+.clipboard
 {
     transition: all 0.2s ease-in-out;
 }
 
-.group_icons div:hover:not(.delete)
+.group_icons div:hover:not(.delete),
+.clipboard:hover
 {
     background-color: rgba(46,40,162,1);
     color: white;
+}
+
+.group_icons div:hover:not(.delete),
+.clipboard:hover,
+.delete:hover
+
+{
+    cursor: pointer;
 }
 
 .delete:hover
@@ -14,7 +24,29 @@
     background-color: #dc3545;
     color: white;
 }
-/*.test > div
-{
 
-}*/
+.motion_div
+{
+    z-index: 2;
+}
+
+.frontground
+{
+    transition: all 0.3s ease-in-out;
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 100vh;
+    background-color: #0000003f;
+    z-index: 1;
+}
+.close_motion
+{
+    right: 0;
+    top: 0;
+    margin: 0 0.75rem 0 0;
+    font-size: 2.4rem;
+}

@@ -41,6 +41,25 @@
     color: #b9b9b9;
 }
 
+.tertiary_button
+{
+    font-size: 1.6rem;
+    font-weight: 600;
+    padding: 0.5rem;
+    text-decoration: none;
+    border: 1px solid rgba(46,40,162,1);
+    background: none;
+    color: rgba(46,40,162,1);
+    border-radius: 0.5rem;
+    transition: all 0.2s ease-in-out;
+}
+
+.tertiary_button:hover
+{
+    background: rgba(46,40,162,1);
+    color: white;
+}
+
 .next_button
 {
     padding: 0;

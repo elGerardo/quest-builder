@@ -19,20 +19,16 @@ let Create = () => {
   let [questCategory, setQuestCategory] = useState("");
   let [isCreateName, setIsCreateName] = useState(true);
   let [isChooseCategory, setIsChooseCategory] = useState(false);
-  let [freeCategory, setFreeCategory] = useState("");
   let [isBuilder, setIsBuilder] = useState(false);
 
-  useEffect(() =>
-  {
-    if(localStorage.getItem("questName") != null) 
-    {
+  useEffect(() => {
+    if (localStorage.getItem("questName") != null) {
       setIsCreateName(false);
       setIsChooseCategory(true);
     }
-    if(localStorage.getItem("questCategory") != null) 
-    {
+    if (localStorage.getItem("questCategory") != null) {
       setIsChooseCategory(false);
-      setIsBuilder(true)
+      setIsBuilder(true);
     }
   }, []);
 
@@ -156,7 +152,9 @@ let Create = () => {
                         type="radio"
                         id="radio-exam"
                         name="categorySelect"
-                        onClick={(e) => { setQuestCategory("exam") }}
+                        onClick={(e) => {
+                          setQuestCategory("exam");
+                        }}
                       />
                       <div
                         className={`d-flex flex-column justify-content-left col`}
@@ -181,7 +179,9 @@ let Create = () => {
                         type="radio"
                         id="radio-vocational"
                         name="categorySelect"
-                        onClick={(e) => { setQuestCategory("vocational") }}
+                        onClick={(e) => {
+                          setQuestCategory("vocational");
+                        }}
                       />
                       <div
                         className={`d-flex flex-column justify-content-left col`}
@@ -208,7 +208,9 @@ let Create = () => {
                         type="radio"
                         id="radio-survey"
                         name="categorySelect"
-                        onClick={(e) => { setQuestCategory("survey") }}
+                        onClick={(e) => {
+                          setQuestCategory("survey");
+                        }}
                       />
                       <div
                         className={`d-flex flex-column justify-content-left col`}
@@ -234,7 +236,9 @@ let Create = () => {
                         type="radio"
                         id="radio-none"
                         name="categorySelect"
-                        onClick={(e) => { setQuestCategory("none") }}
+                        onClick={(e) => {
+                          setQuestCategory("none");
+                        }}
                       />
                       <div
                         className={`d-flex flex-column justify-content-left col`}
@@ -249,15 +253,12 @@ let Create = () => {
                     </div>
                   </label>
                 </div>
-                <Form.Control
-                  type="text"
-                  value={freeCategory}
-                  onChange={(e) => setFreeCategory(e.target.value)}
-                />
+
                 <div
                   className={`m-5 d-flex justify-content-center align-items-center`}
                 >
                   <button
+                    disabled={questCategory === ""}
                     onClick={() => nextBuilder(2)}
                     className={`${globalButtons.next_button} shadow`}
                   >
@@ -296,7 +297,7 @@ let Create = () => {
           }}
           exit={{ opacity: 0, x: 200 }}
         >
-          <Builder/>
+          <Builder />
         </motion.div>
       )}
     </AnimatePresence>

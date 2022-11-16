@@ -9,7 +9,7 @@ import {
   Tooltip,
 } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faRotate } from "@fortawesome/free-solid-svg-icons";
 import { Modal } from "react-bootstrap";
 import { Test } from "../../../services/Test.js";
 import BuilderItem from "./BuilderItem.js";
@@ -20,13 +20,13 @@ let CreateQuest = (props) => {
 
   //states
   let [questName] = useState(localStorage.getItem("questName"));
-  let [isFinish, setIsFinish] = useState(false);
+  let [modalType, setModalType] = useState(false);
   let [questCategory] = useState(localStorage.getItem("questCategory"));
   //let [questIcon] = useState(localStorage.getItem("questIcon"));
   let [builderItems, setBuilderItems] = useState(
-      localStorage.getItem("build") != null
-        ? JSON.parse(localStorage.getItem("build")).items
-        : []
+    localStorage.getItem("build") != null
+      ? JSON.parse(localStorage.getItem("build")).items
+      : []
   );
   let [show, setShow] = useState(false);
 
@@ -50,7 +50,6 @@ let CreateQuest = (props) => {
       //post service
       let post = await new Test().store(data);
 
-      console.log(post.uuid_reply);
       data.uuid_reply = post.uuid_reply;
 
       if (localStorage.getItem("finished_test") != null) {
@@ -58,11 +57,11 @@ let CreateQuest = (props) => {
         tests.push(data);
 
         localStorage.setItem("finished_test", JSON.stringify(tests));
-        
+
         localStorage.removeItem("questName");
         localStorage.removeItem("questCategory");
         localStorage.removeItem("build");
-        
+
         navigate("/share", { replace: true });
         return;
       }
@@ -71,7 +70,7 @@ let CreateQuest = (props) => {
       localStorage.removeItem("questName");
       localStorage.removeItem("questCategory");
       localStorage.removeItem("build");
-      
+
       navigate("/share", { replace: true });
       return;
     } else {
@@ -105,28 +104,34 @@ let CreateQuest = (props) => {
       <Modal size="lg" centered show={show} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>
-            {isFinish ? <span>Finish Test</span> : <span>New Question</span>}
+            {modalType === "finish" ? (
+              <span>Finish Test</span>
+            ) : modalType === "add" ? (
+              <span>New Question</span>
+            ) : (
+              <span>Restart Test</span>
+            )}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body className={`py-5`}>
-          {isFinish ? (
+          {modalType === "finish" ? (
             <div className={`text-center`}>
               <h2>You haven't loged yet</h2>
               <p className={`text-center mb-5`}>
                 Your test will be saved for a while. If you want to persist you
                 test your whole life create and account... it's free ;)
               </p>
-              <button
-                onClick={() => finishTest(false)}
-                className={`${globalButtons.secondary_button} m-5`}
-              >
-                <span>Finish Anyway</span>
-              </button>
-              <button className={`${globalButtons.primary_button} mx-5`}>
-                <span>Create Account</span>
-              </button>
+                <button
+                  onClick={() => finishTest(false)}
+                  className={`${globalButtons.secondary_button} m-5`}
+                >
+                  <span>Finish Anyway</span>
+                </button>
+                <button className={`${globalButtons.primary_button} mx-5`}>
+                  <span>Create Account</span>
+                </button>
             </div>
-          ) : (
+          ) : modalType === "add" ? (
             <BuilderItem
               flowCloseModal={handleClose}
               flowData={(builderData) =>
@@ -136,6 +141,26 @@ let CreateQuest = (props) => {
                 ])
               }
             />
+          ) : (
+            <div className={`text-center`}>
+              <h2>Are you sure you want to restart your test? You will lose all your questions registered.</h2>
+              <div className={`d-flex justify-content-center align-items-center`}>
+                <button
+                  onClick={() => {
+                    localStorage.removeItem("build");
+                    localStorage.removeItem("questName");
+                    localStorage.removeItem("questCategory");
+                    window.location.reload();
+                  }}
+                  className={`${globalButtons.secondary_button} m-5`}
+                >
+                  <span>Restart Test</span>
+                </button>
+                <button onClick={handleClose} className={`${globalButtons.primary_button} mx-5`}>
+                  <span>No, I don't want to restart</span>
+                </button>
+              </div>
+            </div>
           )}
         </Modal.Body>
         {/*<Modal.Footer>
@@ -198,12 +223,29 @@ let CreateQuest = (props) => {
             <OverlayTrigger
               key="add"
               placement="top"
+              overlay={<Tooltip className={`fs-4`}>Restar Test</Tooltip>}
+            >
+              <Button
+                onClick={() => {
+                  handleShow(true);
+                  setModalType("restart");
+                }}
+                className={`mx-3`}
+                variant="light"
+              >
+                <FontAwesomeIcon icon={faRotate} />
+              </Button>
+            </OverlayTrigger>
+
+            <OverlayTrigger
+              key="add"
+              placement="top"
               overlay={<Tooltip className={`fs-4`}>Add Question</Tooltip>}
             >
               <Button
                 onClick={() => {
                   handleShow(true);
-                  setIsFinish(false);
+                  setModalType("add");
                 }}
                 className={`mx-3`}
                 variant="light"
@@ -217,9 +259,10 @@ let CreateQuest = (props) => {
               overlay={<Tooltip className={`fs-4`}>Finish Test</Tooltip>}
             >
               <Button
+                disabled={builderItems.length === 0}
                 onClick={() => {
                   handleShow(true);
-                  setIsFinish(true);
+                  setModalType("finish");
                 }}
                 className={`${globalButtons.primary_button} mx-3`}
                 variant="primary"
