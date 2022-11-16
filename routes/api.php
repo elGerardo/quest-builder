@@ -18,4 +18,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 */
-Route::get("/test", [TestController::class, 'getAll'])->name("getAll");
+Route::group(['prefix' => 'test'], function (){
+    Route::get("/find", [TestController::class, "find"])->name("find");
+    Route::post("/store", [TestController::class, "store"])->name("store");
+});
