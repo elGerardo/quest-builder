@@ -105,7 +105,7 @@ let BuilderItem = (props) => {
                 value={selectOptionsQuantity}
                 onChange={(e) => setSelectOptionsQuantity(e.target.value)}
                 placeholder="Quantity options"
-              ></Form.Control>
+              />
 
               {Array.from(Array(parseInt(selectOptionsQuantity)), (e, i) => {
                 return (

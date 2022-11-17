@@ -13,6 +13,9 @@ import CreateQuest from "../pages/Quest/create/Create.js";
 //Share
 import ShareQuest from "../pages/Quest/share/Share.js";
 
+//FormTest
+import FormTest from "../pages/Quest/form/FormTest.js";
+
 let AnimationRoute = () => {
   let location = useLocation();
 
@@ -20,10 +23,9 @@ let AnimationRoute = () => {
     <AnimatePresence>
       <Routes location={location} key={location.pathname}>
         <Route index element={<Welcome />} />
-        
         <Route path="/create" element={<CreateQuest />} />
-        
         <Route path="/share" element={<ShareQuest />} />
+        <Route path="/form/:test_id" element={<FormTest />} />
         <Route />
       </Routes>
     </AnimatePresence>

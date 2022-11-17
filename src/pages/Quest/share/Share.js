@@ -6,7 +6,7 @@ import {
   faPlus,
   faShare,
   faTrash,
-  faEdit,
+  //faEdit,
   faClipboard,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
@@ -16,7 +16,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Test } from "../../../services/Test.js";
 
 let CreateQuest = () => {
-  let [tests] = useState(
+  let [tests, setTests] = useState(
     localStorage.getItem("finished_test") != null
       ? JSON.parse(localStorage.getItem("finished_test"))
       : []
@@ -28,7 +28,7 @@ let CreateQuest = () => {
   let [show, setShow] = useState(false);
   let [selectedId, setSelectedId] = useState(null);
 
-  let handleClose = () => setShow(false);
+  let handleClose = () => setShow(false); 
   let handleShow = (currentShare) => {
     setShow(true);
     setCurrentShare(currentShare);
@@ -41,7 +41,7 @@ let CreateQuest = () => {
     } else {
       document.getElementById("frontground").style.display = "none";
     }
-  }, [selectedId]);
+  }, [selectedId, currentData]);
 
   let getTest = useCallback(async (id) => {
     setIsLoading(true);
@@ -49,6 +49,21 @@ let CreateQuest = () => {
     setCurrentData(response);
     setIsLoading(false);
   }, []);
+
+  let deleteTest = (index) => {
+    if (localStorage.getItem("login") != null) {
+      //is loged
+      //change status to removed
+      return;
+    }
+
+    let storage = JSON.parse(localStorage.getItem("finished_test"));
+
+    delete storage.splice(index, 1);
+    setTests(storage);
+    localStorage.setItem("finished_test", JSON.stringify(storage));
+    return;
+  };
 
   /*
   let getTest = async (id) => {
@@ -82,7 +97,7 @@ let CreateQuest = () => {
       ></div>
 
       <Container className={`${style.container} my-5`}>
-        {tests.lenght === 0 ? (
+        {tests.length === 0 ? (
           <div
             className={`d-flex justify-content-center align-items-center flex-column`}
           >
@@ -109,7 +124,7 @@ let CreateQuest = () => {
                   <span
                     onClick={() =>
                       navigator.clipboard.writeText(
-                        "http://localhost:3000/share/" + currentShare
+                        "http://localhost:3000/form/" + currentShare
                       )
                     }
                     className={`rounded-circle mx-3 px-3 py-2 ${style.clipboard}`}
@@ -118,7 +133,7 @@ let CreateQuest = () => {
                   </span>
                 </p>
                 <i className={`text-secondary`}>
-                  http://localhost:3000/share/<span>{currentShare}</span>
+                  http://localhost:3000/form/<span>{currentShare}</span>
                 </i>
               </Modal.Body>
               <Modal.Footer>
@@ -148,8 +163,8 @@ let CreateQuest = () => {
                         <Col className={`${style.test_info}`}>
                           <p>{currentData.data.title}</p>
                           <span className={`text-secondary`}>
-                            {currentData.data.questions.lenght}{" "}
-                            {currentData.data.questions.lenght === 0
+                            {currentData.data.questions.length}{" "}
+                            {currentData.data.questions.length === 0
                               ? "Question"
                               : "Questions"}
                           </span>
@@ -160,9 +175,9 @@ let CreateQuest = () => {
                           <div className={`mx-3 px-3 py-2 rounded-circle`}>
                             <FontAwesomeIcon icon={faShare} />
                           </div>
-                          <div className={`mx-3 px-3 py-2 rounded-circle`}>
+                          {/*<div className={`mx-3 px-3 py-2 rounded-circle`}>
                             <FontAwesomeIcon icon={faEdit} />
-                          </div>
+                          </div>*/}
                           <div
                             className={`${style.delete} mx-3 px-3 py-2 rounded-circle`}
                           >
@@ -206,7 +221,7 @@ let CreateQuest = () => {
               )}
             </AnimatePresence>
 
-            {tests.map((item) => {
+            {tests.map((item, index) => {
               return (
                 <motion.div
                   className={`w-50 bg-white shadow rounded p-5 my-3`}
@@ -238,10 +253,11 @@ let CreateQuest = () => {
                       >
                         <FontAwesomeIcon icon={faShare} />
                       </div>
-                      <div className={`mx-3 px-3 py-2 rounded-circle`}>
+                      {/*<div className={`mx-3 px-3 py-2 rounded-circle`}>
                         <FontAwesomeIcon icon={faEdit} />
-                      </div>
+                      </div>*/}
                       <div
+                        onClick={() => deleteTest(index)}
                         className={`${style.delete} mx-3 px-3 py-2 rounded-circle`}
                       >
                         <FontAwesomeIcon icon={faTrash} />

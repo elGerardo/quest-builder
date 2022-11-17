@@ -7,6 +7,7 @@ import {
   Button,
   OverlayTrigger,
   Tooltip,
+  Spinner
 } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faRotate } from "@fortawesome/free-solid-svg-icons";
@@ -22,6 +23,7 @@ let CreateQuest = (props) => {
   let [questName] = useState(localStorage.getItem("questName"));
   let [modalType, setModalType] = useState(false);
   let [questCategory] = useState(localStorage.getItem("questCategory"));
+  let [isLoading, setIsLoading] = useState(false);
   //let [questIcon] = useState(localStorage.getItem("questIcon"));
   let [builderItems, setBuilderItems] = useState(
     localStorage.getItem("build") != null
@@ -115,14 +117,22 @@ let CreateQuest = (props) => {
         </Modal.Header>
         <Modal.Body className={`py-5`}>
           {modalType === "finish" ? (
-            <div className={`text-center`}>
-              <h2>You haven't loged yet</h2>
-              <p className={`text-center mb-5`}>
-                Your test will be saved for a while. If you want to persist you
-                test your whole life create and account... it's free ;)
-              </p>
+            isLoading ? (
+              <Spinner animation="border" role="status">
+                <span className="visually-hidden"></span>
+              </Spinner>
+            ) : (
+              <div className={`text-center`}>
+                <h2>You haven't loged yet</h2>
+                <p className={`text-center mb-5`}>
+                  Your test will be saved for a while. If you want to persist
+                  you test your whole life create and account... it's free ;)
+                </p>
                 <button
-                  onClick={() => finishTest(false)}
+                  onClick={() => {
+                    setIsLoading(true);
+                    finishTest(false);
+                  }}
                   className={`${globalButtons.secondary_button} m-5`}
                 >
                   <span>Finish Anyway</span>
@@ -130,7 +140,8 @@ let CreateQuest = (props) => {
                 <button className={`${globalButtons.primary_button} mx-5`}>
                   <span>Create Account</span>
                 </button>
-            </div>
+              </div>
+            )
           ) : modalType === "add" ? (
             <BuilderItem
               flowCloseModal={handleClose}
@@ -143,8 +154,13 @@ let CreateQuest = (props) => {
             />
           ) : (
             <div className={`text-center`}>
-              <h2>Are you sure you want to restart your test? You will lose all your questions registered.</h2>
-              <div className={`d-flex justify-content-center align-items-center`}>
+              <h2>
+                Are you sure you want to restart your test? You will lose all
+                your questions registered.
+              </h2>
+              <div
+                className={`d-flex justify-content-center align-items-center`}
+              >
                 <button
                   onClick={() => {
                     localStorage.removeItem("build");
@@ -156,7 +172,10 @@ let CreateQuest = (props) => {
                 >
                   <span>Restart Test</span>
                 </button>
-                <button onClick={handleClose} className={`${globalButtons.primary_button} mx-5`}>
+                <button
+                  onClick={handleClose}
+                  className={`${globalButtons.primary_button} mx-5`}
+                >
                   <span>No, I don't want to restart</span>
                 </button>
               </div>

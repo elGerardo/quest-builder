@@ -13,9 +13,10 @@
     color: #b9b9b9;
 }
 
-.content input[type="text"]
+.content input,
+.content select
 {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
 }
 
 .content button
