@@ -45,8 +45,6 @@ class StoreTestRequest extends FormRequest
             "test.items.*.type.required" => "test.items.type must be a property from request",
             "test.items.*.type.string" => "test.items.type must string",
 
-
-
             "status.required" => "status must be a property from request",
             "status.string" => "status must be string"
         ];

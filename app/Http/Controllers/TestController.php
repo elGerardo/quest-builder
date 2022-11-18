@@ -19,7 +19,7 @@ class TestController extends Controller
     public static function find(FindTestRequest $request)
     {
         $id = $request->id;
-        $data = Test::with('questions')->find($id);
+        $data = Test::with('questions.options')->find($id);
         return response()->json(['message' => 'success', 'data' => $data], 200);
     }
 }

@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 class Test extends Model
 {
     protected $table = "test";
+    protected $hidden = ["id", "user_id", "is_local"];
     protected $keyType = "string";
     public $timestamps = false;
 
