@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { Container, Form, FloatingLabel, Button } from "react-bootstrap";
+import { Container, Form, FloatingLabel } from "react-bootstrap";
 import style from "./BuilderItem.module.css";
+import globalButtons from "../../../global/buttons.module.css";
 //TODO investigar que es subscribe
 let BuilderItem = (props) => {
   let [title, setTitle] = useState("");
@@ -133,7 +134,7 @@ let BuilderItem = (props) => {
           ) : (
             <span></span>
           )}
-          <Button type="submit">Finish</Button>
+          <button className={`${globalButtons.primary_button} my-3`} type="submit">Finish</button>
         </Form>
       </div>
 

@@ -1,7 +1,6 @@
 let BASE_API_URL = "http://127.0.0.1:8000/api";
 
 export class Test {
-
   async find(id) {
     let response = await fetch(`${BASE_API_URL}/test/find?id=${id}`, {
       method: "GET",
