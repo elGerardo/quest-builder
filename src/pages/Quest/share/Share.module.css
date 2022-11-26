@@ -28,6 +28,11 @@
 .motion_div
 {
     z-index: 2;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: 5rem auto;
+    overflow-y: scroll;
 }
 
 .frontground

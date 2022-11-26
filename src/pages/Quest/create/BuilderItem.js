@@ -2,31 +2,93 @@ import { useEffect, useState } from "react";
 import { Container, Form, FloatingLabel } from "react-bootstrap";
 import style from "./BuilderItem.module.css";
 import globalButtons from "../../../global/buttons.module.css";
+
+let HowWillLook = (props) => {
+  let [componentData, setComponentData] = useState(props);
+
+  useEffect(() => {
+    setComponentData(props);
+  }, [props, componentData]);
+
+  let content = (
+    <div className={`col text-left`}>
+      <h2>How will looks</h2>
+      <hr />
+      <h3>{componentData.data.title}</h3>
+      {componentData.data.type === "text" ? (
+        <FloatingLabel label="Write your answer..." className={`mb-3`}>
+          <Form.Control
+            as="textarea"
+            className={`py-5`}
+            placeholder="Write your answer..."
+          />
+        </FloatingLabel>
+      ) : componentData.data.type === "number" ? (
+        <Form.Control size="lg" type="number" placeholder="Write a number..." />
+      ) : componentData.data.type === "select" ? (
+        <Form.Select aria-label="Default select example">
+          <option defaultValue="selected" disabled>
+            Select an option...
+          </option>
+          {componentData.data.selectOptions.map((e, i) => {
+            return <option key={i}>{e.option}</option>;
+          })}
+        </Form.Select>
+      ) : componentData.data.type === "multiple" ? (
+        <div>
+          {componentData.data.selectOptions.map((e, i) => {
+            return (
+              <Form.Check
+                inline
+                key={i}
+                label={e.option}
+                id={`check-${i}`}
+                name="group"
+                type="checkbox"
+              />
+            );
+          })}
+        </div>
+      ) : (
+        <span></span>
+      )}
+    </div>
+  );
+  return content;
+};
+
 //TODO investigar que es subscribe
 let BuilderItem = (props) => {
   let [title, setTitle] = useState("");
   let [type, setType] = useState("");
-  let [selectOptionsQuantity, setSelectOptionsQuantity] = useState(0);
+  let [selectOptions, setSelectOptions] = useState([]);
+
+  let [howWillLookData, setHowWillLookData] = useState({
+    title: "",
+    type: "",
+    selectOptions: [],
+  });
 
   let onSubmit = (e) => {
+    console.log(e);
     e.preventDefault();
     if (type === "text" || type === "number") {
       let data = {
         title: title,
         type: type,
-        options: []
+        options: [],
       };
 
-      props.flowData(data);
-      props.flowCloseModal(true);
+      props.emitData(data);
+      props.emitCloseModal(true);
       return;
     }
 
-    if (type === "select") {
+    if (type === "select" || type === "multiple") {
       let data = {
         title: title,
         type: type,
-        options: []
+        options: [],
       };
 
       for (let index = 0; index < e.target.length; index++) {
@@ -38,10 +100,40 @@ let BuilderItem = (props) => {
         }
       }
 
-      props.flowData(data);
-      props.flowCloseModal(true);
+      props.emitData(data);
+      props.emitCloseModal(true);
       return;
     }
+  };
+
+  let updateSelectObjects = (total) => {
+    let itemArray = howWillLookData;
+    let itemLength = itemArray.selectOptions.length;
+    if (itemArray.selectOptions.length < parseInt(total)) {
+      for (let index = 0; index < parseInt(total) - itemLength; index++) {
+        itemArray.selectOptions.push({});
+      }
+    } else {
+      for (let index = 0; index < itemLength - parseInt(total); index++) {
+        itemArray.selectOptions.pop();
+      }
+    }
+
+    setSelectOptions(itemArray.selectOptions);
+    setHowWillLookData({
+      ...howWillLookData,
+      selectOptions: itemArray.selectOptions,
+    });
+  };
+
+  let updateHowWillLookData = (value, index) => {
+    let itemArray = howWillLookData;
+    itemArray.selectOptions[index].option = value;
+    setHowWillLookData({
+      ...howWillLookData,
+      selectOptions: itemArray.selectOptions,
+    });
+    return;
   };
 
   useEffect(() => {}, []);
@@ -56,9 +148,16 @@ let BuilderItem = (props) => {
           <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
             <Form.Label>Title</Form.Label>
             <Form.Control
+              required
               size="lg"
               value={title}
-              onChange={(e) => setTitle(e.target.value)}
+              onChange={(e) => {
+                setTitle(e.target.value);
+                setHowWillLookData({
+                  ...howWillLookData,
+                  title: e.target.value,
+                });
+              }}
               type="text"
               placeholder="title..."
             />{" "}
@@ -66,32 +165,51 @@ let BuilderItem = (props) => {
           <label htmlFor="question_type">Type</label>
           <Form.Group className={`mb-3`}>
             <Form.Check
+              required
               inline
-              onClick={() => setType("text")}
+              onClick={() => {
+                setType("text");
+                setHowWillLookData({ ...howWillLookData, type: "text" });
+              }}
               type="radio"
               label="Open"
               name="question_type"
               id="open"
             />
             <Form.Check
+              required
               inline
-              onClick={() => setType("number")}
+              onClick={() => {
+                setType("number");
+                setHowWillLookData({ ...howWillLookData, type: "number" });
+              }}
               type="radio"
               label="Number"
               name="question_type"
               id="number"
             />
             <Form.Check
+              required
               inline
-              onClick={() => setType("select")}
+              onClick={() => {
+                setType("select");
+                setHowWillLookData({ ...howWillLookData, type: "select" });
+              }}
               type="radio"
               label="Select"
               name="question_type"
               id="select"
             />
             <Form.Check
+              required
               inline
-              onClick={() => setType("multiple")}
+              onClick={() => {
+                setType("multiple");
+                setHowWillLookData({
+                  ...howWillLookData,
+                  type: "multiple",
+                });
+              }}
               type="radio"
               label="Multiple"
               name="question_type"
@@ -101,29 +219,37 @@ let BuilderItem = (props) => {
           {type === "select" || type === "multiple" ? (
             <div>
               <Form.Control
+                required
                 min="0"
                 type="number"
-                value={selectOptionsQuantity}
-                onChange={(e) => setSelectOptionsQuantity(e.target.value)}
+                onChange={(e) => {
+                  updateSelectObjects(
+                    isNaN(parseInt(e.target.value)) ? 0 : e.target.value
+                  );
+                }}
                 placeholder="Quantity options"
               />
-
-              {Array.from(Array(parseInt(selectOptionsQuantity)), (e, i) => {
+              {Array.from(Array(parseInt(selectOptions.length)), (e, i) => {
                 return (
                   <div key={i} className={`row`}>
                     <div className={`col`}>
                       <Form.Control
+                        required
                         size="sm"
                         placeholder="option"
                         type="text"
                         id="option"
+                        onChange={(e) =>
+                          updateHowWillLookData(e.target.value, i)
+                        }
                       ></Form.Control>
                     </div>
                     <div className={`col`}>
                       <Form.Control
+                        required
                         size="sm"
                         placeholder="value"
-                        type="number"
+                        type="text"
                         id="value"
                       ></Form.Control>
                     </div>
@@ -134,46 +260,18 @@ let BuilderItem = (props) => {
           ) : (
             <span></span>
           )}
-          <button className={`${globalButtons.primary_button} my-3`} type="submit">Finish</button>
+          <button
+            className={`${globalButtons.primary_button} my-3`}
+            type="submit"
+          >
+            Finish
+          </button>
         </Form>
       </div>
 
       {/* How will looks */}
-      <div className={`col text-left`}>
-        <h2>How will looks</h2>
-        <hr />
-        <h3>{title}</h3>
-        {type === "text" ? (
-          <FloatingLabel label="Write your answer..." className={`mb-3`}>
-            <Form.Control
-              as="textarea"
-              className={`py-5`}
-              placeholder="Write your answer..."
-            />
-          </FloatingLabel>
-        ) : type === "number" ? (
-          <Form.Control
-            size="lg"
-            type="number"
-            placeholder="Write a number..."
-          />
-        ) : type === "select" ? (
-          <Form.Select aria-label="Default select example">
-            <option defaultValue="selected" disabled>
-              Select an option...
-            </option>
-            <option value="1">Here will be all your options</option>
-            <option value="1">To Choose</option>
-          </Form.Select>
-        ) : type === "multiple" ? (
-          <div>
-            <Form.Check inline label="Here will be all your" id="checkbox1" name="group1" type="checkbox" />
-            <Form.Check inline label="Multiple options to Choose" id="checkbox2" name="group2" type="checkbox" />
-          </div>
-        ) : (
-          <span></span>
-        )}
-      </div>
+
+      <HowWillLook data={howWillLookData} />
     </Container>
   );
   return content;

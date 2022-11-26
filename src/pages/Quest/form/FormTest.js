@@ -14,6 +14,7 @@ let FormTest = (props) => {
   let [formData, setFormData] = useState(null);
   let [isFinished, setIsFinished] = useState(false);
   let [someError, setSomeError] = useState(false);
+  let [testStatus, setTestStatus] = useState("");
 
   useEffect(() => {
     getTest(params.test_id);
@@ -21,15 +22,23 @@ let FormTest = (props) => {
 
   let getTest = async (testId) => {
     await new Test().find(testId).then((response) => {
-      let itemArray = [];
+      //let itemArray = [];
       let baseStateArray = [];
       response.data.questions.forEach((item) => {
+        /*
         let itemObject = {
           question: item.title,
           value: "",
         };
         itemArray.push(itemObject);
+        */
+        if (item.type === "multiple") {
+          baseStateArray.push({value:[]});
+          return;
+        }
+
         baseStateArray.push({});
+        return;
       });
 
       setFormData(baseStateArray);
@@ -38,11 +47,29 @@ let FormTest = (props) => {
     });
   };
 
-  let updateFormValue = (value, question, index) => {
+  let updateFormValue = (value, question, index, type, checked = null) => {
     let itemArray = formData;
-    itemArray[index].value = value;
+    if (type === "text" || type === "selected") {
+      itemArray[index].question = question;
+      itemArray[index].value = value;
+      setFormData(itemArray);
+      console.log(itemArray);
+      return;
+    }
+
     itemArray[index].question = question;
+    if(checked)
+    {
+      itemArray[index].value.push(value);
+      setFormData(itemArray);
+      console.log(itemArray);
+      return;
+    }
+
+    let indexArray = itemArray[index].value.indexOf(value);
+    itemArray[index].value.splice(indexArray, 1);
     setFormData(itemArray);
+    console.log(itemArray);
     return;
   };
 
@@ -55,13 +82,14 @@ let FormTest = (props) => {
       answers: formData,
     };
     let response = await new Answer().store(data);
-    setIsFinished(true);
+    console.log(response);
     if (response.message !== "success") {
       console.log("Something went wrong, please call to the test owner.");
+      setTestStatus("Please, answer all questions.")
       setSomeError(true);
       return;
     }
-
+    setIsFinished(true);
     return;
   };
 
@@ -90,19 +118,24 @@ let FormTest = (props) => {
                 <h1>{test.data.title}</h1>
                 <Form onSubmit={onSubmit}>
                   {test.data.questions.map((item, index) => {
-                    return item.type !== "select" ? (
+                    return item.type === "text" || item.type === "number" ? (
                       <Form.Group key={item.id} className={`my-5`}>
                         <Form.Label>{item.title}</Form.Label>
                         <Form.Control
                           required
                           onChange={(e) =>
-                            updateFormValue(e.target.value, item.title, index)
+                            updateFormValue(
+                              e.target.value,
+                              item.title,
+                              index,
+                              "text"
+                            )
                           }
                           size="lg"
                           type={item.type}
                         />
                       </Form.Group>
-                    ) : (
+                    ) : item.type === "select" ? (
                       <Form.Group key={item.id}>
                         <Form.Label>{item.title}</Form.Label>
                         <Form.Select
@@ -110,7 +143,12 @@ let FormTest = (props) => {
                           defaultValue="selected"
                           size="lg"
                           onChange={(e) =>
-                            updateFormValue(e.target.value, item.title, index)
+                            updateFormValue(
+                              e.target.value,
+                              item.title,
+                              index,
+                              "selected"
+                            )
                           }
                         >
                           <option value="selected" disabled>
@@ -125,8 +163,34 @@ let FormTest = (props) => {
                           })}
                         </Form.Select>
                       </Form.Group>
+                    ) : (
+                      <Form.Group key={item.id}>
+                        <Form.Label className={`d-block`}>{item.title}</Form.Label>
+                        {item.options.map((option, i) => {
+                          return (
+                            <Form.Check
+                              inline
+                              key={option.option}
+                              label={option.option}
+                              onChange={(e) => {
+                                updateFormValue(
+                                  option.option,
+                                  item.title,
+                                  index,
+                                  "multiple",
+                                  e.target.checked
+                                );
+                              }}
+                              id={`check-${i}`}
+                              name={`group-${index}`}
+                              type="checkbox"
+                            />
+                          );
+                        })}
+                      </Form.Group>
                     );
                   })}
+                  <p className={`text-danger`}>{testStatus}</p>
                   <button
                     className={`${globalButtons.primary_button} m-3`}
                     type="submit"

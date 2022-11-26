@@ -135,8 +135,7 @@ let Create = () => {
             <div className={`${style.content}`}>
               <h1 className={`display-2 text-center`}>Choose a category</h1>
               <p className={`text-center`}>
-                We already have some categories wich might you like, if you
-                don't find the yours you can write your own category. Your
+                We already have some categories wich might you like. Your
                 selection won't affect the way that you build your test.
               </p>
               <Form.Group className={`m-1`}>

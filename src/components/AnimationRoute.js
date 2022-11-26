@@ -11,10 +11,13 @@ import CreateQuest from "../pages/Quest/create/Create.js";
 //import CreateCategory from "../pages/Quest/create/CreateCategory";
 
 //Share
-import ShareQuest from "../pages/Quest/share/Share.js";
+import ShareTest from "../pages/Quest/share/Share.js";
 
 //FormTest
 import FormTest from "../pages/Quest/form/FormTest.js";
+
+//Answer
+import Answer from "../pages/answer/Answer.js"; 
 
 let AnimationRoute = () => {
   let location = useLocation();
@@ -24,8 +27,9 @@ let AnimationRoute = () => {
       <Routes location={location} key={location.pathname}>
         <Route index element={<Welcome />} />
         <Route path="/create" element={<CreateQuest />} />
-        <Route path="/share" element={<ShareQuest />} />
+        <Route path="/share" element={<ShareTest />} />
         <Route path="/form/:test_id" element={<FormTest />} />
+        <Route path="/answer/:answer_id" element={<Answer />} />
         <Route />
       </Routes>
     </AnimatePresence>

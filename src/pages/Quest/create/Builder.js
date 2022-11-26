@@ -7,7 +7,7 @@ import {
   Button,
   OverlayTrigger,
   Tooltip,
-  Spinner
+  Spinner,
 } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faRotate } from "@fortawesome/free-solid-svg-icons";
@@ -144,8 +144,8 @@ let CreateQuest = (props) => {
             )
           ) : modalType === "add" ? (
             <BuilderItem
-              flowCloseModal={handleClose}
-              flowData={(builderData) =>
+              emitCloseModal={handleClose}
+              emitData={(builderData) =>
                 setBuilderItems((currentItems) => [
                   ...currentItems,
                   builderData,
@@ -207,12 +207,12 @@ let CreateQuest = (props) => {
         <Form>
           {builderItems.map((item) =>
             item.type === "text" || item.type === "number" ? (
-              <Form.Group key={item.title}>
+              <Form.Group key={item.title + item.type}>
                 <Form.Label>{item.title}</Form.Label>
                 <Form.Control size="lg" type={item.type} />
               </Form.Group>
             ) : item.type === "select" ? (
-              <Form.Group>
+              <Form.Group key={item.title + item.type}>
                 <Form.Label>{item.title}</Form.Label>
                 <Form.Select aria-label={item.title}>
                   <option key={`default`} disabled defaultValue={`selected`}>
@@ -230,8 +230,26 @@ let CreateQuest = (props) => {
                   })}
                 </Form.Select>
               </Form.Group>
+            ) : item.type === "multiple" ? (
+              <div>
+                <Form.Label>{item.title}</Form.Label>
+                <Form.Group>
+                  {item.options.map((itemOption) => {
+                    return (
+                      <Form.Check
+                        inline
+                        key={itemOption.option + itemOption.value}
+                        label={itemOption.value}
+                        id={`check-${itemOption.value}`}
+                        name="group"
+                        type="checkbox"
+                      />
+                    );
+                  })}
+                </Form.Group>
+              </div>
             ) : (
-              <span></span>
+              <span key={item.title + item.type}></span>
             )
           )}
         </Form>
@@ -240,7 +258,7 @@ let CreateQuest = (props) => {
         >
           <div className={`shadow-lg bg-white rounded p-3`}>
             <OverlayTrigger
-              key="add"
+              key="restart"
               placement="top"
               overlay={<Tooltip className={`fs-4`}>Restar Test</Tooltip>}
             >

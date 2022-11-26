@@ -1,6 +1,14 @@
 import style from "./Share.module.css";
 import globalButtons from "../../../global/buttons.module.css";
-import { Container, Row, Col, Modal, Button, Spinner } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Modal,
+  Button,
+  Spinner,
+  Table,
+} from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faPlus,
@@ -15,7 +23,7 @@ import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { Test } from "../../../services/Test.js";
 
-let CreateQuest = () => {
+let ShareTest = () => {
   let [tests, setTests] = useState(
     localStorage.getItem("finished_test") != null
       ? JSON.parse(localStorage.getItem("finished_test"))
@@ -28,7 +36,7 @@ let CreateQuest = () => {
   let [show, setShow] = useState(false);
   let [selectedId, setSelectedId] = useState(null);
 
-  let handleClose = () => setShow(false); 
+  let handleClose = () => setShow(false);
   let handleShow = (currentShare) => {
     setShow(true);
     setCurrentShare(currentShare);
@@ -46,6 +54,7 @@ let CreateQuest = () => {
   let getTest = useCallback(async (id) => {
     setIsLoading(true);
     let response = await new Test().find(id);
+    console.log(response.data);
     setCurrentData(response);
     setIsLoading(false);
   }, []);
@@ -86,9 +95,10 @@ let CreateQuest = () => {
         opacity: 1,
         transition: {
           duration: 0.5,
-          delay: 0.5,
+          delay: 0.6,
         },
       }}
+      exit={{ opacity: 0, y: 200 }}
     >
       <div
         className={`${style.frontground}`}
@@ -146,7 +156,7 @@ let CreateQuest = () => {
             <AnimatePresence>
               {selectedId && (
                 <motion.div
-                  className={`position-absolute w-50 p-5 bg-white rounded shadow-lg ${style.motion_div}`}
+                  className={`w-75 p-5 bg-white rounded shadow-lg ${style.motion_div}`}
                   layoutId={selectedId}
                 >
                   <button
@@ -163,8 +173,8 @@ let CreateQuest = () => {
                         <Col className={`${style.test_info}`}>
                           <p>{currentData.data.title}</p>
                           <span className={`text-secondary`}>
-                            {currentData.data.questions.length}{" "}
-                            {currentData.data.questions.length === 0
+                            {currentData.data.questions_count}{" "}
+                            {currentData.data.questions_count === 1
                               ? "Question"
                               : "Questions"}
                           </span>
@@ -172,44 +182,74 @@ let CreateQuest = () => {
                         <Col
                           className={`${style.group_icons} d-flex justify-content-center align-items-center`}
                         >
-                          <div className={`mx-3 px-3 py-2 rounded-circle`}>
+                          <div
+                            onClick={() => handleShow(currentData.data.id)}
+                            className={`mx-3 px-3 py-2 rounded-circle`}
+                          >
                             <FontAwesomeIcon icon={faShare} />
                           </div>
                           {/*<div className={`mx-3 px-3 py-2 rounded-circle`}>
                             <FontAwesomeIcon icon={faEdit} />
                           </div>*/}
-                          <div
+                          {/*<div
+                            onClick={() => deleteTest(index //error to get index)}
                             className={`${style.delete} mx-3 px-3 py-2 rounded-circle`}
                           >
                             <FontAwesomeIcon icon={faTrash} />
-                          </div>
+                        </div>*/}
                         </Col>
                       </Row>
                       <hr />
                       <div>
                         <div className={`d-flex`}>
-                          <p className={`mx-5 d-flex flex-column text-center`}>
-                            Total Entries <span>10</span>
-                          </p>
-                          <p className={`mx-5 d-flex flex-column text-center`}>
-                            Total Answers <span>7</span>
-                          </p>
-                          <p className={`mx-5 d-flex flex-column text-center`}>
-                            Withour Answer <span>3</span>
+                          <p className={`d-flex flex-column text-center`}>
+                            Total Answers{" "}
+                            <span>{currentData.data.answers_count}</span>
                           </p>
                         </div>
                         <div>
+                          <button
+                            className={`${globalButtons.tertiary_button} mx-5`}
+                          >
+                            <span>See Charts</span>
+                          </button>
                           <button
                             className={`${globalButtons.tertiary_button} m-5`}
                           >
                             <span>Download PDF</span>
                           </button>
-                          <button
-                            className={`${globalButtons.tertiary_button} mx-5`}
-                          >
-                            <span>See Details</span>
-                          </button>
                         </div>
+                        <Table striped bordered hover>
+                          <thead>
+                            <tr>
+                              <th>No. Answer</th>
+                              <th>User Name</th>
+                              <th>Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {currentData.data.answers.map((answer, index) => {
+                              return (
+                                <tr key={answer.id}>
+                                  <td className={`text-center`}>{index + 1}</td>
+                                  <td>
+                                    {answer.username !== null
+                                      ? answer.username
+                                      : "N/A"}
+                                  </td>
+                                  <td className={`text-center`}>
+                                    <a
+                                      href={`/answer/${answer.id}`}
+                                      className={`${globalButtons.primary_button}`}
+                                    >
+                                      See Answers
+                                    </a>
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </Table>
                       </div>
                     </div>
                   ) : (
@@ -220,11 +260,10 @@ let CreateQuest = () => {
                 </motion.div>
               )}
             </AnimatePresence>
-
             {tests.map((item, index) => {
               return (
                 <motion.div
-                  className={`w-50 bg-white shadow rounded p-5 my-3`}
+                  className={`w-50 bg-white shadow rounded p-5 m-5`}
                   key={item.uuid_reply}
                   layoutId={item.uuid_reply}
                 >
@@ -275,4 +314,4 @@ let CreateQuest = () => {
   return content;
 };
 
-export default CreateQuest;
+export default ShareTest;
