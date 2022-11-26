@@ -25,5 +25,6 @@ Route::group(["prefix" => "test"], function (){
 });
 
 Route::group(["prefix" => "answer"], function () {
+    Route::get("/find", [AnswersController::class, "find"])->name("answer.find");
     Route::post("/store", [AnswersController::class, "store"])->name("answer.store");
 });

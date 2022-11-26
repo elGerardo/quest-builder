@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class AnswerItems extends Model
 {
     protected $table = "answer_items";
+    protected $keyType = "string";
 }

@@ -32,7 +32,7 @@ class StoreAnswerRequest extends FormRequest
             "answers.array" => "data must be array",
 
             "answers.*.value.required" => "value must be a property from request",
-            "answers.*.value.string" => "value must be array",
+            "answers.*.value.string_or_array" => "value must be string or array",
 
             "answers.*.question.required" => "question must be a property from request",
             "answers.*.question.string" => "question must be array"
@@ -44,6 +44,7 @@ class StoreAnswerRequest extends FormRequest
      *
      * @return array
      */
+    //TODO make a custom validarion (string or array) on answers.*.value
     public function rules()
     {
         return [
@@ -51,7 +52,7 @@ class StoreAnswerRequest extends FormRequest
             "test_id" => "required|string|max:36",
             "username" => "nullable|string",
             "answers" => "required|array",
-            "answers.*.value" => "required|string",
+            "answers.*.value" => "required|string_or_array",
             "answers.*.question" => "required|string",
         ];
     }

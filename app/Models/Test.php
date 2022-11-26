@@ -10,7 +10,7 @@ use Illuminate\Support\Str;
 class Test extends Model
 {
     protected $table = "test";
-    protected $hidden = ["id", "user_id", "is_local"];
+    protected $hidden = ["user_id", "is_local"];
     protected $keyType = "string";
     public $timestamps = false;
 
@@ -27,6 +27,7 @@ class Test extends Model
             $test->save();
 
             // store questions
+            $order = 0;
             foreach( $request->input("test")["items"] as $item)
             {
 
@@ -34,6 +35,7 @@ class Test extends Model
                 $question = new Questions;
                 $question->id = $uuidQuestion;
                 $question->test_id = $uuid;
+                $question->sort = $order;
                 $question->title = $item["title"];
                 $question->type = $item["type"];
                 $question->save();
@@ -51,6 +53,8 @@ class Test extends Model
                         $option->save();
                     }
                 }
+
+                $order += 1;
             }
 
             DB::commit();
@@ -67,5 +71,10 @@ class Test extends Model
     public function questions()
     {
         return $this->hasMany(Questions::class, "test_id", "id");
+    }
+
+    public function answers()
+    {
+        return $this->hasMany(Answers::class, "test_id", "id");
     }
 }
